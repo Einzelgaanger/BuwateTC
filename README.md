@@ -59,6 +59,35 @@ This project is built with:
 - React
 - shadcn-ui
 - Tailwind CSS
+- Supabase (Database & Authentication)
+- Google OAuth
+
+## Quick Setup
+
+1. **Clone the repository**
+2. **Install dependencies:**
+   ```sh
+   npm i
+   ```
+
+3. **Set up Supabase:**
+   - See `QUICK_START.md` for 3-step setup
+   - Or `SUPABASE_SETUP.md` for detailed guide
+
+4. **Create `.env` file:**
+   ```env
+   VITE_SUPABASE_URL=your-supabase-url
+   VITE_SUPABASE_PUBLISHABLE_KEY=your-supabase-key
+   ```
+
+5. **Run database migration:**
+   - Open Supabase SQL Editor
+   - Run `supabase/migrations/001_initial_schema.sql`
+
+6. **Start development server:**
+   ```sh
+   npm run dev
+   ```
 
 ## How can I deploy this project?
 
