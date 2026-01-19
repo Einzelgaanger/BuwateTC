@@ -2,95 +2,124 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+/* BTC Tennis Club - Premium Sports Design System
+   Inspired by Wimbledon elegance meets modern fintech */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&display=swap');
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Core palette - Tennis court inspired */
+    --background: 45 20% 97%;
+    --foreground: 160 30% 12%;
 
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 160 30% 12%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 160 30% 12%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    /* Primary - Deep forest green (tennis court) */
+    --primary: 152 45% 22%;
+    --primary-foreground: 45 30% 97%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    /* Secondary - Warm cream */
+    --secondary: 42 35% 93%;
+    --secondary-foreground: 160 30% 12%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    /* Muted - Soft sage */
+    --muted: 140 15% 92%;
+    --muted-foreground: 160 15% 45%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    /* Accent - Championship gold */
+    --accent: 42 85% 55%;
+    --accent-foreground: 160 30% 12%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    /* Destructive - Alert red */
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    /* Court green variations */
+    --court: 152 55% 28%;
+    --court-light: 148 40% 88%;
+    --court-dark: 155 50% 15%;
 
-    --radius: 0.5rem;
+    /* Gold variations */
+    --gold: 42 85% 55%;
+    --gold-light: 45 75% 75%;
+    --gold-dark: 38 80% 40%;
 
-    --sidebar-background: 0 0% 98%;
+    /* Tennis ball accent */
+    --tennis-yellow: 65 90% 55%;
 
-    --sidebar-foreground: 240 5.3% 26.1%;
+    --border: 140 20% 88%;
+    --input: 140 20% 88%;
+    --ring: 152 45% 22%;
 
-    --sidebar-primary: 240 5.9% 10%;
+    --radius: 0.75rem;
 
-    --sidebar-primary-foreground: 0 0% 98%;
+    /* Sidebar */
+    --sidebar-background: 152 45% 22%;
+    --sidebar-foreground: 45 30% 95%;
+    --sidebar-primary: 42 85% 55%;
+    --sidebar-primary-foreground: 160 30% 12%;
+    --sidebar-accent: 152 40% 30%;
+    --sidebar-accent-foreground: 45 30% 95%;
+    --sidebar-border: 152 35% 35%;
+    --sidebar-ring: 42 85% 55%;
 
-    --sidebar-accent: 240 4.8% 95.9%;
+    /* Premium gradients */
+    --gradient-hero: linear-gradient(135deg, hsl(152 45% 22%) 0%, hsl(155 50% 15%) 50%, hsl(160 45% 12%) 100%);
+    --gradient-gold: linear-gradient(135deg, hsl(42 85% 55%) 0%, hsl(38 80% 48%) 100%);
+    --gradient-card: linear-gradient(180deg, hsl(0 0% 100%) 0%, hsl(45 20% 98%) 100%);
+    --gradient-glass: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
 
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    /* Shadows */
+    --shadow-sm: 0 1px 2px 0 rgba(22, 45, 35, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(22, 45, 35, 0.08), 0 2px 4px -2px rgba(22, 45, 35, 0.05);
+    --shadow-lg: 0 10px 15px -3px rgba(22, 45, 35, 0.1), 0 4px 6px -4px rgba(22, 45, 35, 0.05);
+    --shadow-xl: 0 20px 25px -5px rgba(22, 45, 35, 0.12), 0 8px 10px -6px rgba(22, 45, 35, 0.08);
+    --shadow-gold: 0 4px 20px -2px rgba(212, 175, 55, 0.35);
+    --shadow-court: 0 4px 20px -2px rgba(34, 87, 65, 0.25);
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+    --background: 160 30% 8%;
+    --foreground: 45 30% 95%;
 
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
+    --card: 160 25% 12%;
+    --card-foreground: 45 30% 95%;
 
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 160 25% 12%;
+    --popover-foreground: 45 30% 95%;
 
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    --primary: 42 85% 55%;
+    --primary-foreground: 160 30% 8%;
 
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 160 20% 18%;
+    --secondary-foreground: 45 30% 95%;
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --muted: 160 20% 18%;
+    --muted-foreground: 140 15% 60%;
 
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    --accent: 152 45% 35%;
+    --accent-foreground: 45 30% 95%;
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 62% 45%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --border: 160 20% 22%;
+    --input: 160 20% 22%;
+    --ring: 42 85% 55%;
+
+    --sidebar-background: 160 30% 6%;
+    --sidebar-foreground: 45 30% 95%;
+    --sidebar-primary: 42 85% 55%;
+    --sidebar-primary-foreground: 160 30% 8%;
+    --sidebar-accent: 160 25% 15%;
+    --sidebar-accent-foreground: 45 30% 95%;
+    --sidebar-border: 160 20% 20%;
+    --sidebar-ring: 42 85% 55%;
   }
 }
 
@@ -99,7 +128,159 @@ All colors MUST be HSL.
     @apply border-border;
   }
 
+  html {
+    scroll-behavior: smooth;
+  }
+
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground antialiased;
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+
+  h1, h2, h3 {
+    font-family: 'Playfair Display', serif;
+  }
+}
+
+@layer components {
+  /* Glass morphism effect */
+  .glass {
+    @apply backdrop-blur-md bg-white/80 border border-white/20;
+  }
+
+  .glass-dark {
+    @apply backdrop-blur-md bg-black/40 border border-white/10;
+  }
+
+  /* Premium card styles */
+  .card-premium {
+    @apply bg-card rounded-xl shadow-lg border border-border/50 overflow-hidden;
+    background: var(--gradient-card);
+  }
+
+  /* Court pattern background */
+  .court-pattern {
+    background-image: 
+      linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px),
+      linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+
+  /* Tennis ball animation */
+  @keyframes bounce-tennis {
+    0%, 100% {
+      transform: translateY(0) rotate(0deg);
+      animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+    }
+    50% {
+      transform: translateY(-15px) rotate(180deg);
+      animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+    }
+  }
+
+  .animate-tennis-bounce {
+    animation: bounce-tennis 2s infinite;
+  }
+
+  /* Fade in up animation */
+  @keyframes fade-in-up {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-fade-in-up {
+    animation: fade-in-up 0.6s ease-out forwards;
+  }
+
+  /* Shimmer effect */
+  @keyframes shimmer {
+    0% {
+      background-position: -200% 0;
+    }
+    100% {
+      background-position: 200% 0;
+    }
+  }
+
+  .shimmer {
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.2) 50%,
+      transparent 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 2s infinite;
+  }
+
+  /* Glow effects */
+  .glow-gold {
+    box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+  }
+
+  .glow-court {
+    box-shadow: 0 0 20px rgba(34, 87, 65, 0.4);
+  }
+
+  /* Text gradient */
+  .text-gradient-gold {
+    background: linear-gradient(135deg, hsl(42 85% 55%) 0%, hsl(38 80% 40%) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Stat card */
+  .stat-card {
+    @apply relative overflow-hidden rounded-xl p-6 transition-all duration-300;
+    background: var(--gradient-card);
+    box-shadow: var(--shadow-md);
+  }
+
+  .stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-xl);
+  }
+
+  /* Court time slot */
+  .time-slot {
+    @apply relative p-3 rounded-lg border transition-all duration-200 cursor-pointer;
+  }
+
+  .time-slot-available {
+    @apply bg-court-light/50 border-court/30 hover:bg-court-light hover:border-court;
+  }
+
+  .time-slot-booked {
+    @apply bg-muted border-border opacity-60 cursor-not-allowed;
+  }
+
+  .time-slot-selected {
+    @apply bg-court border-court text-white;
+  }
+
+  /* Chat bubble */
+  .chat-bubble {
+    @apply max-w-[85%] rounded-2xl px-4 py-3;
+  }
+
+  .chat-bubble-user {
+    @apply bg-primary text-primary-foreground ml-auto rounded-br-md;
+  }
+
+  .chat-bubble-assistant {
+    @apply bg-secondary text-secondary-foreground mr-auto rounded-bl-md;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
   }
 }
