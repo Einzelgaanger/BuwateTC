@@ -14,49 +14,16 @@ export type Database = {
   }
   public: {
     Tables: {
-      user_roles: {
-        Row: {
-          id: string
-          user_id: string
-          role: 'member' | 'admin' | 'coach'
-          created_at: string
-          updated_at: string
-        }
-        Insert: {
-          id?: string
-          user_id: string
-          role?: 'member' | 'admin' | 'coach'
-          created_at?: string
-          updated_at?: string
-        }
-        Update: {
-          id?: string
-          user_id?: string
-          role?: 'member' | 'admin' | 'coach'
-          created_at?: string
-          updated_at?: string
-        }
-      }
+      [_ in never]: never
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      get_user_role: {
-        Args: { user_uuid: string }
-        Returns: 'member' | 'admin' | 'coach' | null
-      }
-      is_admin: {
-        Args: { user_uuid: string }
-        Returns: boolean
-      }
-      is_coach: {
-        Args: { user_uuid: string }
-        Returns: boolean
-      }
+      [_ in never]: never
     }
     Enums: {
-      user_role: 'member' | 'admin' | 'coach'
+      [_ in never]: never
     }
     CompositeTypes: {
       [_ in never]: never
@@ -183,8 +150,6 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {
-      user_role: 'member' | 'admin' | 'coach',
-    },
+    Enums: {},
   },
 } as const
