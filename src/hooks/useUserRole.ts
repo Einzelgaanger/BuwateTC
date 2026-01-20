@@ -38,17 +38,42 @@ export function useUserRole() {
 
   const fetchUserRole = async (userId: string) => {
     try {
-      const { data, error } = await supabase
+      // Create a timeout promise
+      const timeoutPromise = new Promise<never>((_, reject) => 
+        setTimeout(() => reject(new Error('Query timeout after 5 seconds')), 5000)
+      );
+
+      // Create the query promise
+      const queryPromise = supabase
         .from('user_roles')
         .select('role')
         .eq('user_id', userId)
         .single();
 
-      if (error) throw error;
-      setRole((data?.role as UserRole) || 'member');
-    } catch (error) {
-      console.error('Error fetching user role:', error);
-      setRole('member'); // Default to member if error
+      // Race between query and timeout
+      const result = await Promise.race([queryPromise, timeoutPromise]);
+      const { data, error } = result as { data: any; error: any };
+
+      if (error) {
+        // If it's a "not found" error, default to member
+        if (error.code === 'PGRST116') {
+          console.log('User role not found, defaulting to member');
+          setRole('member');
+        } else {
+          console.error('Error fetching role:', error);
+          // For any other error, default to member
+          setRole('member');
+        }
+      } else if (data) {
+        setRole((data.role as UserRole) || 'member');
+      } else {
+        // No data and no error - default to member
+        setRole('member');
+      }
+    } catch (error: any) {
+      console.error('Error or timeout fetching user role:', error);
+      // Default to member if there's any error (timeout, RLS issue, etc.)
+      setRole('member');
     } finally {
       setLoading(false);
     }

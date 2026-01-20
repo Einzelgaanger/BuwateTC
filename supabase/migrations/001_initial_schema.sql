@@ -80,16 +80,12 @@ CREATE POLICY "Users can view their own role"
   USING (auth.uid() = user_id);
 
 -- Admins can view all roles
+-- Use is_admin() function to avoid infinite recursion (function bypasses RLS)
 DROP POLICY IF EXISTS "Admins can view all roles" ON public.user_roles;
 CREATE POLICY "Admins can view all roles"
   ON public.user_roles
   FOR SELECT
-  USING (
-    EXISTS (
-      SELECT 1 FROM public.user_roles
-      WHERE user_id = auth.uid() AND role = 'admin'
-    )
-  );
+  USING (public.is_admin(auth.uid()));
 
 -- Function to get user role
 CREATE OR REPLACE FUNCTION public.get_user_role(user_uuid UUID)
