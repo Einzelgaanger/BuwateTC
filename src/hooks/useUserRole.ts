@@ -48,26 +48,22 @@ export function useUserRole() {
         .from('user_roles')
         .select('role')
         .eq('user_id', userId)
-        .single();
+        .maybeSingle();
 
       // Race between query and timeout
       const result = await Promise.race([queryPromise, timeoutPromise]);
-      const { data, error } = result as { data: any; error: any };
+      const { data, error } = result as { data: { role: string } | null; error: any };
 
       if (error) {
-        // If it's a "not found" error, default to member
-        if (error.code === 'PGRST116') {
-          console.log('User role not found, defaulting to member');
-          setRole('member');
-        } else {
-          console.error('Error fetching role:', error);
-          // For any other error, default to member
-          setRole('member');
-        }
-      } else if (data) {
-        setRole((data.role as UserRole) || 'member');
+        console.error('Error fetching role:', error);
+        // For any error, default to member
+        setRole('member');
+      } else if (data && data.role) {
+        const userRole = data.role as UserRole;
+        setRole(userRole || 'member');
       } else {
-        // No data and no error - default to member
+        // No data - default to member
+        console.log('User role not found, defaulting to member');
         setRole('member');
       }
     } catch (error: any) {

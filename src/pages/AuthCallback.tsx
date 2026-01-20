@@ -36,9 +36,9 @@ export default function AuthCallback() {
                 console.error('Role fetch error:', roleError);
               }
 
-              if (roleData?.role) {
+              if (roleData && roleData.role) {
                 // Role found, redirect based on role
-                const userRole = roleData.role;
+                const userRole = roleData.role as string;
                 console.log('Role found:', userRole);
                 
                 setChecking(false);

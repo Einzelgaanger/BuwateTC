@@ -25,6 +25,7 @@ const signupSchema = z.object({
 
 export default function Auth() {
   const [isLogin, setIsLogin] = useState(true);
+  const [isForgotPassword, setIsForgotPassword] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -39,6 +40,36 @@ export default function Auth() {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
     setErrors({ ...errors, [e.target.name]: '' });
+  };
+
+  const handleForgotPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+    setErrors({});
+
+    if (!formData.email || !z.string().email().safeParse(formData.email).success) {
+      setErrors({ email: 'Please enter a valid email address' });
+      setIsLoading(false);
+      return;
+    }
+
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(formData.email, {
+        redirectTo: `${window.location.origin}/auth/callback`,
+      });
+
+      if (error) {
+        toast.error(error.message);
+      } else {
+        toast.success('Password reset email sent! Please check your inbox.');
+        setIsForgotPassword(false);
+        setFormData({ ...formData, email: '', password: '' });
+      }
+    } catch (err) {
+      toast.error('An unexpected error occurred');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -86,10 +117,10 @@ export default function Auth() {
 
           toast.success('Welcome back!');
           // Redirect based on role
-          const role = roleData?.role || 'member';
-          if (role === 'admin') {
+          const userRole = roleData?.role || 'member';
+          if (userRole === 'admin') {
             navigate('/admin/dashboard');
-          } else if (role === 'coach') {
+          } else if (userRole === 'coach') {
             navigate('/coach/dashboard');
           } else {
             navigate('/member/dashboard');
@@ -223,17 +254,19 @@ export default function Auth() {
           >
             <div className="mb-6 sm:mb-8">
               <h1 className="text-2xl sm:text-3xl font-display font-bold mb-2 sm:mb-3 text-foreground">
-                {isLogin ? 'Welcome Back' : 'Create Account'}
+                {isForgotPassword ? 'Reset Password' : isLogin ? 'Welcome Back' : 'Create Account'}
               </h1>
               <p className="text-muted-foreground text-sm sm:text-base leading-relaxed">
-                {isLogin
+                {isForgotPassword
+                  ? 'Enter your email address and we\'ll send you a reset link'
+                  : isLogin
                   ? 'Sign in to manage your bookings and access your dashboard'
                   : 'Join BTC and start booking courts with exclusive member benefits'}
               </p>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-5">
-              {!isLogin && (
+            <form onSubmit={isForgotPassword ? handleForgotPassword : handleSubmit} className="space-y-5">
+              {!isLogin && !isForgotPassword && (
                 <>
                   <div>
                     <label className="block text-sm font-semibold mb-3 text-foreground">
@@ -363,40 +396,56 @@ export default function Auth() {
                 )}
               </div>
 
-              <div>
-                <label className="block text-sm font-semibold mb-3 text-foreground">Password</label>
-                <div className="relative">
-                  <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-                  <input
-                    type={showPassword ? 'text' : 'password'}
-                    name="password"
-                    value={formData.password}
-                    onChange={handleChange}
-                    placeholder="Minimum 6 characters"
-                    className={`w-full pl-12 pr-12 py-3.5 rounded-xl border-2 transition-all ${
-                      errors.password 
-                        ? 'border-destructive focus:border-destructive focus:ring-destructive/20' 
-                        : 'border-border/50 hover:border-border focus:border-court focus:ring-court/20'
-                    } focus:outline-none focus:ring-4 bg-background`}
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors p-1"
-                  >
-                    {showPassword ? (
-                      <EyeOff className="w-5 h-5" />
-                    ) : (
-                      <Eye className="w-5 h-5" />
+              {!isForgotPassword && (
+                <div>
+                  <div className="flex items-center justify-between mb-3">
+                    <label className="block text-sm font-semibold text-foreground">Password</label>
+                    {isLogin && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setIsForgotPassword(true);
+                          setErrors({});
+                        }}
+                        className="text-sm text-court font-medium hover:text-court-dark hover:underline transition-colors"
+                      >
+                        Forgot password?
+                      </button>
                     )}
-                  </button>
+                  </div>
+                  <div className="relative">
+                    <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                    <input
+                      type={showPassword ? 'text' : 'password'}
+                      name="password"
+                      value={formData.password}
+                      onChange={handleChange}
+                      placeholder="Minimum 6 characters"
+                      className={`w-full pl-12 pr-12 py-3.5 rounded-xl border-2 transition-all ${
+                        errors.password 
+                          ? 'border-destructive focus:border-destructive focus:ring-destructive/20' 
+                          : 'border-border/50 hover:border-border focus:border-court focus:ring-court/20'
+                      } focus:outline-none focus:ring-4 bg-background`}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors p-1"
+                    >
+                      {showPassword ? (
+                        <EyeOff className="w-5 h-5" />
+                      ) : (
+                        <Eye className="w-5 h-5" />
+                      )}
+                    </button>
+                  </div>
+                  {errors.password && (
+                    <p className="text-sm text-destructive mt-2 flex items-center gap-1">
+                      <span>⚠</span> {errors.password}
+                    </p>
+                  )}
                 </div>
-                {errors.password && (
-                  <p className="text-sm text-destructive mt-2 flex items-center gap-1">
-                    <span>⚠</span> {errors.password}
-                  </p>
-                )}
-              </div>
+              )}
 
               <Button
                 type="submit"
@@ -408,8 +457,10 @@ export default function Auth() {
                 {isLoading ? (
                   <>
                     <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                    {isLogin ? 'Signing in...' : 'Creating account...'}
+                    {isForgotPassword ? 'Sending...' : isLogin ? 'Signing in...' : 'Creating account...'}
                   </>
+                ) : isForgotPassword ? (
+                  'Send Reset Link'
                 ) : isLogin ? (
                   'Sign In'
                 ) : (
@@ -424,20 +475,37 @@ export default function Auth() {
               transition={{ delay: 0.7 }}
               className="mt-8 pt-6 border-t border-border/50 text-center"
             >
-              <p className="text-sm text-muted-foreground">
-                {isLogin ? "Don't have an account?" : 'Already have an account?'}{' '}
-                <button
-                  type="button"
-                  onClick={() => {
-                    setIsLogin(!isLogin);
-                    setErrors({});
-                    setFormData({ name: '', email: '', password: '', role: 'member' });
-                  }}
-                  className="text-court font-semibold hover:text-court-dark hover:underline transition-colors"
-                >
-                  {isLogin ? 'Sign up' : 'Sign in'}
-                </button>
-              </p>
+              {isForgotPassword ? (
+                <p className="text-sm text-muted-foreground">
+                  Remember your password?{' '}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsForgotPassword(false);
+                      setErrors({});
+                    }}
+                    className="text-court font-semibold hover:text-court-dark hover:underline transition-colors"
+                  >
+                    Sign in
+                  </button>
+                </p>
+              ) : (
+                <p className="text-sm text-muted-foreground">
+                  {isLogin ? "Don't have an account?" : 'Already have an account?'}{' '}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsLogin(!isLogin);
+                      setIsForgotPassword(false);
+                      setErrors({});
+                      setFormData({ name: '', email: '', password: '', role: 'member' });
+                    }}
+                    className="text-court font-semibold hover:text-court-dark hover:underline transition-colors"
+                  >
+                    {isLogin ? 'Sign up' : 'Sign in'}
+                  </button>
+                </p>
+              )}
             </motion.div>
           </motion.div>
         </motion.div>
