@@ -9,7 +9,7 @@ export default function AuthCallback() {
   const [redirected, setRedirected] = useState(false);
 
   useEffect(() => {
-    // Listen for auth state changes (this handles OAuth callbacks)
+    // Listen for auth state changes (handles email verification and auth redirects)
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         console.log('Auth state changed:', event, session?.user?.id);
@@ -96,7 +96,7 @@ export default function AuthCallback() {
         const errorDescription = hashParams.get('error_description');
         
         if (error) {
-          console.error('OAuth error in URL:', error, errorDescription);
+          console.error('Auth error in URL:', error, errorDescription);
           toast.error(errorDescription || 'Authentication failed. Please try again.');
           setChecking(false);
           navigate('/auth');
