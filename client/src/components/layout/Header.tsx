@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, User, LogIn } from 'lucide-react';
+import { Menu, X, User, LogIn, LayoutDashboard } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useAuth } from '@/lib/auth';
 import { cn } from '@/lib/utils';
 
 const navigation = [
@@ -15,6 +16,7 @@ const navigation = [
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
+  const { user } = useAuth();
   const isHome = location.pathname === '/';
 
   return (
@@ -73,21 +75,22 @@ export function Header() {
 
           {/* Actions */}
           <div className="hidden lg:flex items-center gap-3">
-            <Button 
-              variant={isHome ? "glass" : "ghost"} 
-              size="sm"
-              asChild
-            >
-              <Link to="/auth">
-                <LogIn className="w-4 h-4 mr-2" />
-                Sign In
-              </Link>
-            </Button>
-            <Button 
-              variant="hero" 
-              size="sm"
-              asChild
-            >
+            {user ? (
+              <Button variant={isHome ? "glass" : "ghost"} size="sm" asChild>
+                <Link to="/dashboard">
+                  <LayoutDashboard className="w-4 h-4 mr-2" />
+                  Dashboard
+                </Link>
+              </Button>
+            ) : (
+              <Button variant={isHome ? "glass" : "ghost"} size="sm" asChild>
+                <Link to="/auth">
+                  <LogIn className="w-4 h-4 mr-2" />
+                  Sign In
+                </Link>
+              </Button>
+            )}
+            <Button variant="hero" size="sm" asChild>
               <Link to="/book">
                 Book Now
               </Link>
@@ -152,12 +155,21 @@ export function Header() {
                   </Link>
                 ))}
                 <div className="pt-4 space-y-2">
-                  <Button variant="outline" className="w-full" asChild>
-                    <Link to="/auth" onClick={() => setMobileMenuOpen(false)}>
-                      <LogIn className="w-4 h-4 mr-2" />
-                      Sign In
-                    </Link>
-                  </Button>
+                  {user ? (
+                    <Button variant="outline" className="w-full" asChild>
+                      <Link to="/dashboard" onClick={() => setMobileMenuOpen(false)}>
+                        <LayoutDashboard className="w-4 h-4 mr-2" />
+                        Dashboard
+                      </Link>
+                    </Button>
+                  ) : (
+                    <Button variant="outline" className="w-full" asChild>
+                      <Link to="/auth" onClick={() => setMobileMenuOpen(false)}>
+                        <LogIn className="w-4 h-4 mr-2" />
+                        Sign In
+                      </Link>
+                    </Button>
+                  )}
                   <Button variant="hero" className="w-full" asChild>
                     <Link to="/book" onClick={() => setMobileMenuOpen(false)}>
                       Book Now

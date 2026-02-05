@@ -223,9 +223,22 @@ export default function MemberDashboard() {
   };
 
   const handleCancelBooking = async (bookingId: number) => {
-    // TODO: Implement actual cancellation logic with database
-    toast.success('Booking cancelled successfully');
     setCancelDialogOpen(null);
+    try {
+      const res = await fetch(`/api/bookings/${bookingId}`, {
+        method: 'DELETE',
+        credentials: 'include',
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        toast.error(data.error || 'Could not cancel booking');
+        return;
+      }
+      toast.success('Booking cancelled successfully');
+      // Optionally refetch or remove from local state when using real API for bookings
+    } catch {
+      toast.error('Failed to cancel booking');
+    }
   };
 
   const handleSubmitPayment = async (e: React.FormEvent<HTMLFormElement>) => {

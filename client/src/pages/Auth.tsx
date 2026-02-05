@@ -5,6 +5,7 @@ import { Mail, Lock, User, Eye, EyeOff, ArrowLeft, Loader2, Users, Shield, Troph
 import { Button } from '@/components/ui/button';
 
 import { useAuth } from '@/lib/auth';
+import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
@@ -139,19 +140,12 @@ export default function Auth() {
 
           <Link
             to="/"
-            className="inline-flex items-center text-white/70 hover:text-white text-sm mb-8 transition-colors"
+            className="inline-flex items-center text-white/80 hover:text-white text-sm mb-10 transition-all group"
             data-testid="link-back-home"
-
           >
-            <Link
-              to="/"
-              className="inline-flex items-center text-white/80 hover:text-white text-sm mb-10 transition-all group"
-            >
-              <ArrowLeft className="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform" />
-              Back to Home
-            </Link>
-          </motion.div>
-
+            <ArrowLeft className="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform" />
+            Back to Home
+          </Link>
 
           <div className="flex items-center gap-3 mb-8">
             <div className="relative w-12 h-12 rounded-full bg-gradient-to-br from-court-light to-court flex items-center justify-center border-2 border-gold">
@@ -167,7 +161,7 @@ export default function Auth() {
                 Club
               </span>
             </div>
-          </motion.div>
+          </div>
 
           <div className="bg-white rounded-2xl p-8 shadow-2xl">
             <h1 className="text-2xl font-display font-bold mb-2">
@@ -276,7 +270,7 @@ export default function Auth() {
                       <span>Note: Admin accounts can only be created by existing administrators.</span>
                     </p>
                   </div>
-                </>
+                </div>
               )}
 
               <div>
@@ -328,42 +322,15 @@ export default function Auth() {
                       <EyeOff className="w-5 h-5" />
                     ) : (
                       <Eye className="w-5 h-5" />
-
                     )}
-                  </div>
-                  <div className="relative">
-                    <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-                    <input
-                      type={showPassword ? 'text' : 'password'}
-                      name="password"
-                      value={formData.password}
-                      onChange={handleChange}
-                      placeholder="Minimum 6 characters"
-                      className={`w-full pl-12 pr-12 py-3.5 rounded-xl border-2 transition-all ${
-                        errors.password 
-                          ? 'border-destructive focus:border-destructive focus:ring-destructive/20' 
-                          : 'border-border/50 hover:border-border focus:border-court focus:ring-court/20'
-                      } focus:outline-none focus:ring-4 bg-background`}
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors p-1"
-                    >
-                      {showPassword ? (
-                        <EyeOff className="w-5 h-5" />
-                      ) : (
-                        <Eye className="w-5 h-5" />
-                      )}
-                    </button>
-                  </div>
-                  {errors.password && (
-                    <p className="text-sm text-destructive mt-2 flex items-center gap-1">
-                      <span>⚠</span> {errors.password}
-                    </p>
-                  )}
+                  </button>
                 </div>
-              )}
+                {errors.password && (
+                  <p className="text-sm text-destructive mt-2 flex items-center gap-1">
+                    <span>⚠</span> {errors.password}
+                  </p>
+                )}
+              </div>
 
               <Button
                 type="submit"

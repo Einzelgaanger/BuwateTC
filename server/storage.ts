@@ -1,6 +1,6 @@
 import { users, bookings, type User, type InsertUser, type Booking, type InsertBooking } from "@shared/schema";
 import { db } from "./db";
-import { eq } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
 
 export interface IStorage {
   getUser(id: number): Promise<User | undefined>;
@@ -8,6 +8,7 @@ export interface IStorage {
   createUser(user: InsertUser): Promise<User>;
   getBookingsByUserId(userId: number): Promise<Booking[]>;
   createBooking(booking: InsertBooking): Promise<Booking>;
+  deleteBooking(id: number, userId: number): Promise<boolean>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -33,6 +34,14 @@ export class DatabaseStorage implements IStorage {
   async createBooking(insertBooking: InsertBooking): Promise<Booking> {
     const [booking] = await db.insert(bookings).values(insertBooking).returning();
     return booking;
+  }
+
+  async deleteBooking(id: number, userId: number): Promise<boolean> {
+    const result = await db
+      .delete(bookings)
+      .where(and(eq(bookings.id, id), eq(bookings.userId, userId)))
+      .returning({ id: bookings.id });
+    return result.length > 0;
   }
 }
 

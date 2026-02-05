@@ -61,6 +61,11 @@ const systemPrompt = `You are the AI Assistant for Buwate Tennis Club (BTC), a p
 - Use UGX for all prices (Ugandan Shillings)`;
 
 export function registerRoutes(app: Express): void {
+  // Health check (for load balancers and monitoring)
+  app.get("/api/health", (_req: Request, res: Response) => {
+    res.json({ status: "ok", timestamp: new Date().toISOString() });
+  });
+
   // Auth routes
   app.post("/api/auth/register", async (req: Request, res: Response) => {
     try {
@@ -168,6 +173,29 @@ export function registerRoutes(app: Express): void {
     } catch (error) {
       console.error("Booking error:", error);
       res.status(500).json({ error: "Failed to create booking" });
+    }
+  });
+
+  app.delete("/api/bookings/:id", async (req: Request, res: Response) => {
+    const userId = (req.session as any)?.userId;
+    if (!userId) {
+      return res.status(401).json({ error: "Not authenticated" });
+    }
+
+    const id = parseInt(req.params.id, 10);
+    if (Number.isNaN(id)) {
+      return res.status(400).json({ error: "Invalid booking id" });
+    }
+
+    try {
+      const deleted = await storage.deleteBooking(id, userId);
+      if (!deleted) {
+        return res.status(404).json({ error: "Booking not found or access denied" });
+      }
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Cancel booking error:", error);
+      res.status(500).json({ error: "Failed to cancel booking" });
     }
   });
 

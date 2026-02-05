@@ -60,6 +60,32 @@ This project is built with:
 - shadcn-ui
 - Tailwind CSS
 
+## Production deployment
+
+Before deploying, ensure:
+
+1. **Environment variables** (copy `.env.example` to `.env` and set):
+   - `DATABASE_URL` – PostgreSQL connection string (e.g. Supabase)
+   - `SESSION_SECRET` – **Required in production.** Strong random string (e.g. `openssl rand -base64 32`)
+   - `NODE_ENV=production`
+   - `PORT` – Optional; defaults to 5000
+   - `VITE_SUPABASE_URL` and `VITE_SUPABASE_PUBLISHABLE_KEY` – For Supabase auth (client)
+   - `LOVABLE_API_KEY` – Optional; for AI chat
+
+2. **Database**
+   - Run `npm run db:push` (or apply migrations) so schema and session table exist.
+   - Supabase: use the project’s connection string; the app creates the session table automatically on first request.
+
+3. **Build and run**
+   ```sh
+   npm run build
+   npm start
+   ```
+   Or set your host’s start command to `node dist/index.js` and ensure `NODE_ENV=production` and `PORT` are set.
+
+4. **Health check**
+   - `GET /api/health` returns `{ status: "ok" }` for load balancers and monitoring.
+
 ## How can I deploy this project?
 
 Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
